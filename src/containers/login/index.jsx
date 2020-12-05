@@ -1,82 +1,90 @@
-/* 
-登陆的一级路由组件
-*/
 import React, { Component } from 'react'
-import { Form, Icon, Input, Button } from 'antd'
 import { connect } from 'react-redux'
-import { loginAsync } from '../../redux/action-creators/user'
+import { Redirect } from 'react-router-dom'
+import { Form, Input, Button, message } from 'antd'
+import { UserOutlined, LockOutlined } from '@ant-design/icons'
+import { reqLogin } from '../../api'
+import { getLoginInfo } from '../../redux/action/loginInfoAction'
 import logo from '../../assets/images/logo.png'
 import './index.css'
 
-const { Item } = Form // 必须在所有import的下面
+@connect(state => ({ userInfo: state.userInfo }), {
+  saveUserInfo: getLoginInfo,
+})
+class LoginComponent extends Component {
+  handleSubmit = async values => {
+    const { username, password } = values
+    const { data, status } = await reqLogin(username, password)
+    if (status === 0) {
+      // 1.请求到的值保存到redux
+      this.props.saveUserInfo(data)
+      // 2.跳转，必须在存储之后跳转否则跳转到的组件拿不到值
+      this.props.history.replace('/admin')
+      message.success('登录成功!')
+    } else {
+      message.error(data.msg)
+    }
 
-connect(
-  state => ({ hasLogin: state.user.hasLogin }), // 用于显示的一般属性
-  { loginAsync } // 用于更新状态的函数属性
-)(Form.create()(Login))
-
-class Login extends Component {
-  handleSubmit = event => {
-    event.preventDefault() // 阻止表单提交
-
-    // 对所有表单项进行统一的表单验证
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        // 验证成功
-        const { username, password } = values
-        this.props.loginAsync(username, password)
-      } else {
-        // 什么都不用写
-      }
-    })
+    // this.props.loginAsync(username, password)
   }
 
   /* 
   对密码进行自定义验证
   */
   validatePwd = (rule, value, callback) => {
+    const pwdReg = /^[a-zA-Z0-9_]+$/
+    const length = value && value.length
     /*
-    用户名/密码的的合法性要求
-      1). 必须输入
-      2). 必须大于等于4位
-      3). 必须小于等于12位
-      4). 必须是英文、数字或下划线组成
-    */
-    // value = value.trim()
-    if (value === '') {
-      callback('密码必须输入')
-    } else if (value.length < 4) {
-      callback('密码必须大于等于4位')
-    } else if (value.length > 12) {
-      callback('密码必须小于等于12位')
-    } else if (!/^[a-zA-Z0-9_]+$/.test(value)) {
-      callback('密码必须是英文、数字或下划线组成')
+  用户名/密码的的合法性要求
+    1). 必须输入
+    2). 必须大于等于4位
+    3). 必须小于等于12位
+    4). 必须是英文、数字或下划线组成
+  */
+    if (!value) {
+      return Promise.reject('密码必须输入')
+    } else if (length < 4) {
+      return Promise.reject('密码必须大于等于4位')
+    } else if (length > 12) {
+      return Promise.reject('密码必须小于等于12位')
+    } else if (!pwdReg.test(value)) {
+      return Promise.reject('密码必须是英文、数字或下划线组成')
     } else {
-      callback() // 验证通过/成功
+      return Promise.resolve() // 验证通过/成功
     }
   }
 
   render() {
+    if (this.props.userInfo.isLogin) {
+      return <Redirect to="/admin" />
+    }
     return (
       <div className="login">
-        <header className="login-header">
-          <img src={logo} alt="logo" />
-          <h1>后台管理系统</h1>
-        </header>
+        <div className="login-header">
+          <img src={logo} alt="login" />
+          <h1>商城管理系统</h1>
+        </div>
         <div className="login-content">
-          <h1>用户登陆</h1>
-          <Form onFinish={this.handleSubmit} className="login-form">
-            <Item
+          <h1>用户登录</h1>
+          <Form
+            name="normal_login"
+            className="login-form"
+            initialValues={{
+              remember: true,
+            }}
+            onFinish={this.handleSubmit}
+          >
+            <Form.Item
               name="username"
               // 配置对象
               initialValue="" // 初始值
               /*
-               用户名/密码的的合法性要求
-                 1). 必须输入
-                 2). 必须大于等于4位
-                 3). 必须小于等于12位
-                 4). 必须是英文、数字或下划线组成
-               */
+            用户名/密码的的合法性要求
+              1). 必须输入
+              2). 必须大于等于4位
+              3). 必须小于等于12位
+              4). 必须是英文、数字或下划线组成
+            */
               // 声明式验证: 利用已有的验证规则进行验证, 不用亲自判断
               rules={[
                 { required: true, whitespace: true, message: '用户名必须输入' },
@@ -84,22 +92,25 @@ class Login extends Component {
                 { max: 12, message: '用户名不能大于12位' },
                 { pattern: /^[a-zA-Z0-9_]+$/, message: '用户名必须是英文、数字或下划线组成' },
               ]}
+              hasFeedback
             >
-              <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="用户名" />
-            </Item>
+              <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="用户名" allowClear />
+            </Form.Item>
             <Form.Item
               name="password"
-              initialValue="" // 初始值
+              // 初始值
+              initialValue=""
               rules={[
                 // 自定义验证
                 { validator: this.validatePwd },
               ]}
+              hasFeedback
             >
-              <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="密码" />
+              <Input.Password prefix={<LockOutlined className="site-form-item-icon" />} type="password" allowClear placeholder="密码" />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit" className="login-form-button">
-                登陆
+              <Button type="primary" htmlType="submit" color="#1DA57A" className="login-form-button">
+                登录
               </Button>
             </Form.Item>
           </Form>
@@ -108,35 +119,4 @@ class Login extends Component {
     )
   }
 }
-
-export default Login
-
-/* 
-1. 高阶函数
-  定义: 如果函数接收的参数是函数或者返回值是函数
-  例子: Promise() / then() / 定时器 / 数组遍历相关方法 / bind() / $() / $.get() / Form.create()
-  好处: 更加动态, 更加具有扩展性
-
-2. 高阶组件
-  定义: 参数为组件，返回值为新组件的函数
-  例子: Form.create()(组件) / withRouter(组件) / connect()(组件)
-  与高阶函数的关系?  
-      高阶组件是一个特别的高阶函数
-      接收的是组件函数, 同时返回新的组件函数
-  作用:
-      React 中用于复用组件逻辑的一种高级技巧
-
-Form.create()(Login), 接收一个Form组件, 返回一个新组件
-  Form.create = function () {
-    const form = 创建一个强大form对象
-    return function (FormComponent) {
-      return class WrapComponent extends Component {
-        render () {
-          return <Login form={form}/>
-        }
-      }
-    }
-  }
-  const LoginWrap = Form.create()(Login)
-  // LoginWrap被注册成了路由
-*/
+export default LoginComponent

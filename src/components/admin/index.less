@@ -1,0 +1,98 @@
+#components-layout-demo-custom-trigger .trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+#components-layout-demo-custom-trigger .trigger:hover {
+  color: #1890ff;
+}
+
+// #components-layout-demo-custom-trigger  {
+//   height: 32px;
+//   // background: rgba(255, 255, 255, 0.3);
+//   margin: 16px;
+// }
+.logo {
+  display: flex;
+  align-items: center;
+  margin: 10% 8%;
+}
+
+// 菜单叠起来的类
+.logobox {
+  height: 23%;
+  width: 23%;
+  margin-right: 5%;
+  transition: all 0.6;
+}
+// 菜单展开的
+.logoboxOpen {
+  width: 50%;
+  height: 50%;
+  margin: 10% auto;
+  transition: all 0.6;
+}
+.logo_title {
+  color: #fff;
+  // h1标签默认会生成10px的外边距
+  margin-bottom: 0;
+  font-size: 20px;
+}
+.site-layout .site-layout-background {
+  background: #fff;
+}
+
+.site-layout-background {
+  height: 80px !important;
+  background-color: #fff;
+  .header-top {
+    height: 40px;
+    line-height: 40px;
+    text-align: right;
+    padding-right: 20px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #1da57a;
+    .username {
+      margin: 0 1%;
+    }
+  }
+
+  .header-botton {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    .header-bottom-left {
+      position: relative;
+      width: 25%;
+      font-size: 20px;
+      text-align: center;
+      &::after {
+        content: '';
+        left: 50%;
+        top: 52px;
+        transform: translateX(-50%);
+        position: absolute;
+        border-top: 23px solid white;
+        border-right: 23px solid transparent;
+        border-bottom: 23px solid transparent;
+        border-left: 23px solid transparent;
+      }
+    }
+    .header-bottom-right {
+      width: 75%;
+      text-align: right;
+      margin-right: 30px;
+      img {
+        width: 30px;
+        height: 20px;
+        margin: 0 15px;
+      }
+    }
+  }
+}
+.ant-btn-link span {
+  color: #1da57a !important;
+}

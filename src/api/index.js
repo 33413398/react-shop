@@ -3,8 +3,10 @@
 函数的返回值是promise
 */
 import MyAxios from './myAxios'
-import { message } from 'antd'
+// import { message } from 'antd'
 import { BASE_URL } from '../config'
 
 /* 登陆 */
-export const reqLogin = ({ username, password }) => MyAxios.post(`${BASE_URL}/login`, { username, password })
+export const reqLogin = (username, password) => MyAxios.post(`${BASE_URL}/login`, { username, password })
+// 列表
+export const reqCategory = () => MyAxios.get(`${BASE_URL}/manage/category/list`)

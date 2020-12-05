@@ -5,7 +5,7 @@ import { Form, Input, Button, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { reqLogin } from '../../api'
 import { getLoginInfo } from '../../redux/action/loginInfoAction'
-import logo from '../../assets/images/logo.png'
+import logo from '../../assets/images/logo192.png'
 import './index.css'
 
 @connect(state => ({ userInfo: state.userInfo }), {

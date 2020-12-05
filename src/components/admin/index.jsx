@@ -18,7 +18,7 @@ import Bar from '../bar/Bar'
 import Line from '../line/Line'
 import Pie from '../pie/Pie'
 // logo
-import logo from '../../assets/images/logo.png'
+import logo from '../../assets/images/logo192.png'
 import './index.css'
 const { Header, Sider, Content, Footer } = Layout
 const { SubMenu } = Menu

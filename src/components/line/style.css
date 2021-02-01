@@ -1,0 +1,95 @@
+.contentBox {
+  padding: 0 20px;
+}
+p {
+  margin: 0!important;
+  padding: 0!important;
+}
+.ListBox {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.ListLi {
+  float: left;
+  margin-right: 60px;
+  margin-bottom: 20px;
+  width: 540px;
+  box-sizing: border-box;
+  border-top: 3px solid #0D364A;
+  border-bottom: 2px solid #62BFC3;
+}
+.ListLi:hover {
+  box-shadow: #BDE2E3 0px 0px 30px 5px;
+}
+.liTop {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  padding: 0 15px;
+  border-bottom: 1px solid #DADADA;
+}
+.imgBox {
+  float: left;
+  width: 40px;
+  height: 40px;
+  margin: 5px 10px 0 0;
+  box-sizing: border-box;
+  background-color: #63BEC3;
+  border-radius: 100%;
+}
+.h3Box {
+  float: left;
+  font-size: 24px;
+  color: #333;
+  height: 50px;
+  line-height: 50px;
+  box-sizing: border-box;
+
+}
+.checkXQ {
+  height: 50px;
+  float: right;
+  line-height: 50px;
+  color: #62BFC3;
+  cursor: pointer;
+}
+.liBottom {
+  height: 137px;
+  width: 100%;
+  display: flex;
+  align-content: center;
+  padding: 0 15px;
+}
+.bottomFl {
+  color: #333;
+  height: 137px;
+  padding: 30px 0 30px 40px;
+}
+.bugSum {
+  margin-left: 5px;
+  font-size: 26px;
+  font-weight: 700;
+  font-family: arial,'微软雅黑';
+  color: #62C3D3;
+  cursor: pointer;
+}
+.PoCbug {
+  margin-left: 5px;
+  font-size: 14px;
+  font-family: arial,'微软雅黑';
+  color: #62C3D3;
+  cursor: pointer;
+}
+.UPtime {
+  margin-left: 5px;
+  font-size: 14px;
+  font-family: arial,'微软雅黑';
+  color: #62C3D3;
+}
+.bottomFr {
+  height: 137px;
+  margin-top: 5px;
+  width: 220px;
+  box-sizing: border-box;
+}

@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { Redirect, Switch, Route } from 'react-router-dom'
+import { Redirect, Switch, Route, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { deleteUserInfo, reqWeather } from '../../redux/action/loginInfoAction'
 import { Layout, Menu, Button, Modal } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
-import { UserOutlined, DesktopOutlined, PieChartOutlined, FileOutlined, TeamOutlined, FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons'
+import { FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons'
 import screenfull from 'screenfull'
 import dayjs from 'dayjs'
 // import { reqCategory } from '../../api'
@@ -20,6 +20,7 @@ import Pie from '../pie/Pie'
 // logo
 import logo from '../../assets/images/logo192.png'
 import './index.css'
+import MenuList from '../../config/menu-config'
 const { Header, Sider, Content, Footer } = Layout
 const { SubMenu } = Menu
 
@@ -49,13 +50,19 @@ class Admin extends Component {
         newDate: dayjs().format('YYYY年 MM月DD日 HH:mm:ss  A'),
       })
     }, 1000)
+    // 菜单
+    let menuData = this.creatMenu(MenuList)
+    this.setState({
+      menuList: menuData,
+    })
+    // 获取标题
+    // console.log(this.getTitle())
     // 请求天气
     let weather = await reqWeather()
     this.setState({
-      NowWeather: weather,
+      NowWeather: weather.data[0],
+      city: weather.city,
     })
-
-    console.log(this.props)
   }
 
   // 注销组件前清除(可以防止组件切换的报错，万金油)
@@ -93,10 +100,7 @@ class Admin extends Component {
   }
 
   render() {
-    let { isfullScreen, newDate, NowWeather, collapsed } = this.state
-    if (NowWeather) {
-      var { nightPictureUrl, dayPictureUrl } = NowWeather
-    }
+    let { isfullScreen, newDate, NowWeather, city, collapsed, menuList } = this.state
     if (!this.props.userInfo.isLogin) {
       return <Redirect to="/login" />
     }
@@ -107,25 +111,8 @@ class Admin extends Component {
             <img src={logo} alt="logo" className={!collapsed ? 'logobox' : 'logoboxOpen'} />
             {!collapsed && <h1 className="logo_title">商城管理系统</h1>}
           </div>
-          <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-            <Menu.Item key="1" icon={<PieChartOutlined />}>
-              Option 1
-            </Menu.Item>
-            <Menu.Item key="2" icon={<DesktopOutlined />}>
-              Option 2
-            </Menu.Item>
-            <SubMenu key="sub1" icon={<UserOutlined />} title="User">
-              <Menu.Item key="3">Tom</Menu.Item>
-              <Menu.Item key="4">Bill</Menu.Item>
-              <Menu.Item key="5">Alex</Menu.Item>
-            </SubMenu>
-            <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
-              <Menu.Item key="6">Team 1</Menu.Item>
-              <Menu.Item key="8">Team 2</Menu.Item>
-            </SubMenu>
-            <Menu.Item key="9" icon={<FileOutlined />}>
-              Files
-            </Menu.Item>
+          <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} defaultOpenKeys={['home']}>
+            {menuList}
           </Menu>
         </Sider>
         <Layout className="site-layout">
@@ -140,11 +127,13 @@ class Admin extends Component {
               </Button>
             </div>
             <div className="header-botton">
-              <div className="header-bottom-left">{this.props.location.pathname.split('/').pop()}</div>
+              <div className="header-bottom-left">{this.getTitle()}</div>
               <div className="header-bottom-right">
                 {newDate}&nbsp;&nbsp;&nbsp;&nbsp;
-                {NowWeather && `实时天气:  今天是${NowWeather.date}    ${NowWeather.weather}    ${NowWeather.temperature}    ${NowWeather.wind}`}
-                {newDate.split(' ').pop() === 'PM' ? <img src={NowWeather && nightPictureUrl} alt="png" /> : <img src={NowWeather && dayPictureUrl} alt="png" />}
+                {NowWeather &&
+                  ` 今天是  :   ${NowWeather.week} 您所在城市 :  ${city}      空气指数  : ${NowWeather.air} 空气质量  :   ${NowWeather.air_level}   ${NowWeather.tem2} —— ${NowWeather.tem1}   ${
+                    NowWeather.wea
+                  }    ${NowWeather.win[0]} —— ${NowWeather.win[1] === undefined ? '' : NowWeather.win[1]}`}
               </div>
             </div>
           </Header>
@@ -152,15 +141,15 @@ class Admin extends Component {
             className="site-layout-background"
             style={{
               margin: '24px 16px',
-              padding: 24,
+              padding: '24px 0',
               minHeight: 280,
             }}
           >
             {/* 路由区 */}
             <Switch>
               <Route path="/admin/home" component={Home} />
-              <Route path="/admin/category" component={Category} />
-              <Route path="/admin/product" component={Product} />
+              <Route path="/admin/prod_about/category" component={Category} />
+              <Route path="/admin/prod_about/product" component={Product} />
               <Route path="/admin/role" component={Role} />
               <Route path="/admin/user" component={User} />
               <Route path="/admin/charts/bar" component={Bar} />
@@ -173,6 +162,47 @@ class Admin extends Component {
         </Layout>
       </Layout>
     )
+  }
+  // 根据数据动态生成菜单函数
+  creatMenu = menuData => {
+    return menuData.map(item => {
+      if (item.children) {
+        // 二级菜单
+        return (
+          <SubMenu key={item.key} icon={item.icon} title={item.title}>
+            {this.creatMenu(item.children)}
+          </SubMenu>
+        )
+      } else {
+        // 一级菜单
+        return (
+          <Menu.Item key={item.key} icon={item.icon}>
+            <Link to={item.path}>{item.title}</Link>
+          </Menu.Item>
+        )
+      }
+    })
+  }
+  // 获取标题
+  getTitle = () => {
+    let title = ''
+    let newPath = this.props.location.pathname.split('/').pop()
+    MenuList.forEach(item => {
+      if (item.children instanceof Array) {
+        // find返回找到的那一项
+        let temp = item.children.find(item2 => {
+          return item2.key === newPath
+        })
+        if (temp) {
+          return (title = temp.title)
+        }
+      } else {
+        if (item.key === newPath) {
+          title = item.title
+        }
+      }
+    })
+    return title
   }
 }
 export default Admin

@@ -17,11 +17,11 @@ export const deleteUserInfo = value => {
 
 export const reqWeather = () => {
   return new Promise((resolve, reject) => {
-    const url = `http://api.map.baidu.com/telematics/v3/weather?location=${'天津'}&output=json&ak=${'3p49MVra6urFRGOT9s8UBWr2'}`
+    const url = `https://tianqiapi.com/api?version=v1&appid=27674338&appsecret=2REbl6Uv`
     // callback函数由jsonp库内部定义__jp0函数调用的 --> callback参数来告诉服务器返回的js代码: __jp(data)
     jsonp(url, {}, (err, data) => {
-      if (!err && data.status === 'success') {
-        resolve(data.results[0].weather_data[0])
+      if (!err && data) {
+        resolve(data)
       } else {
         // reject(new Error('获取天气失败!'))
         message.error('获取天气失败!')

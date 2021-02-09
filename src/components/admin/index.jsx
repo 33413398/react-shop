@@ -101,6 +101,7 @@ class Admin extends Component {
 
   render() {
     let { isfullScreen, newDate, NowWeather, city, collapsed, menuList } = this.state
+    let { pathname } = this.props.location
     if (!this.props.userInfo.isLogin) {
       return <Redirect to="/login" />
     }
@@ -111,7 +112,8 @@ class Admin extends Component {
             <img src={logo} alt="logo" className={!collapsed ? 'logobox' : 'logoboxOpen'} />
             {!collapsed && <h1 className="logo_title">商城管理系统</h1>}
           </div>
-          <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} defaultOpenKeys={['home']}>
+          <Menu theme="dark" mode="inline" selectedKeys={pathname.split('/').reverse()[0]} defaultOpenKeys={pathname.split('/').splice(2)}>
+            {/* ["", "admin", "home"] 所以是删除第二项并返回删除的数 */}
             {menuList}
           </Menu>
         </Sider>

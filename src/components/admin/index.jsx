@@ -17,6 +17,8 @@ import User from '../user/User'
 import Bar from '../bar/Bar'
 import Line from '../line/Line'
 import Pie from '../pie/Pie'
+import Details from '../product/components/Details/Details'
+import AddModify from '../product/components/AddModify/AddModify'
 // logo
 import logo from '../../assets/images/logo192.png'
 import './index.css'
@@ -112,7 +114,7 @@ class Admin extends Component {
             <img src={logo} alt="logo" className={!collapsed ? 'logobox' : 'logoboxOpen'} />
             {!collapsed && <h1 className="logo_title">商城管理系统</h1>}
           </div>
-          <Menu theme="dark" mode="inline" selectedKeys={pathname.split('/').reverse()[0]} defaultOpenKeys={pathname.split('/').splice(2)}>
+          <Menu theme="dark" mode="inline" selectedKeys={pathname.split('/').indexOf('product') !== -1 ? 'product' : pathname.split('/').reverse()[0]} defaultOpenKeys={pathname.split('/').splice(2)}>
             {/* ["", "admin", "home"] 所以是删除第二项并返回删除的数 */}
             {menuList}
           </Menu>
@@ -143,7 +145,6 @@ class Admin extends Component {
             className="site-layout-background"
             style={{
               margin: '24px 16px',
-              padding: '24px 0',
               minHeight: 280,
             }}
           >
@@ -151,7 +152,10 @@ class Admin extends Component {
             <Switch>
               <Route path="/admin/home" component={Home} />
               <Route path="/admin/prod_about/category" component={Category} />
-              <Route path="/admin/prod_about/product" component={Product} />
+              <Route path="/admin/prod_about/product" component={Product} exact />
+              <Route path="/admin/prod_about/product/add" component={AddModify} />
+              <Route path="/admin/prod_about/product/details/:id" component={Details} />
+              <Route path="/admin/prod_about/product/modify/:id" component={AddModify} />
               <Route path="/admin/role" component={Role} />
               <Route path="/admin/user" component={User} />
               <Route path="/admin/charts/bar" component={Bar} />
@@ -188,7 +192,7 @@ class Admin extends Component {
   // 获取标题
   getTitle = () => {
     let title = ''
-    let newPath = this.props.location.pathname.split('/').pop()
+    let newPath = this.props.location.pathname.split('/').indexOf('product') !== -1 ? 'product' : this.props.location.pathname.split('/').pop()
     MenuList.forEach(item => {
       if (item.children instanceof Array) {
         // find返回找到的那一项

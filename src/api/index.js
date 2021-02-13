@@ -22,3 +22,7 @@ export const reqSearchProduct = (pageNum, pageSize, searchType, keyWord) => MyAx
 export const reqUpdateStatus = (productId, status) => MyAxios.post(`${BASE_URL}/manage/product/updateStatus`, { productId, status })
 // 根据商品ID获取商品
 export const reqProductDetails = productId => MyAxios.get(`${BASE_URL}/manage/product/info`, { params: { productId } }) //中括号内写的就是关键词变量
+// 删除商品图片
+export const reqDelImage = name => MyAxios.post(`${BASE_URL}/manage/img/delete`, { name })
+//添加商品
+export const reqAddProduct = data => MyAxios.post(`${BASE_URL}/manage/product/add`, { ...data })

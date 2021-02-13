@@ -1,10 +1,15 @@
 import React, { Component } from 'react'
 import { Button, message, Table } from 'antd'
+import { connect } from 'react-redux'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import './css.less'
 import { reqCategory } from '../../api'
+import { getCategoryList } from '../../redux/action/CategoryAction'
 import Modal from './components/Modal/view'
-export default class CategoryComponent extends Component {
+@connect(state => ({}), {
+  getCategoryList,
+})
+class CategoryComponent extends Component {
   formRef = React.createRef()
   constructor(props) {
     super(props)
@@ -30,7 +35,8 @@ export default class CategoryComponent extends Component {
     let result = await reqCategory()
     if (result) {
       let { status, data, msg } = result
-      if (status !== 0) message.error(msg, 1)
+      if (status !== 0) return message.error(msg, 1)
+      this.props.getCategoryList(data)
       this.setState({
         dataSource: data,
       })
@@ -122,3 +128,4 @@ export default class CategoryComponent extends Component {
     }
   }
 }
+export default CategoryComponent

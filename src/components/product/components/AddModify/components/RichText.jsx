@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { EditorState, convertToRaw } from 'draft-js'
+import { EditorState, convertToRaw, ContentState } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import draftToHtml from 'draftjs-to-html'
 import htmlToDraft from 'html-to-draftjs'
@@ -20,7 +20,15 @@ export default class RichTextEditor extends Component {
     const { editorState } = this.state
     return draftToHtml(convertToRaw(editorState.getCurrentContent()))
   }
-
+  // 通过父组件初始化富文本
+  setRichText = html => {
+    const contentBlock = htmlToDraft(html)
+    if (contentBlock) {
+      const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks)
+      const editorState = EditorState.createWithContent(contentState)
+      this.setState({ editorState })
+    }
+  }
   render() {
     const { editorState } = this.state
     return (
@@ -33,7 +41,7 @@ export default class RichTextEditor extends Component {
           editorStyle={{
             paddingLeft: '10px',
             border: '1px solid #000',
-            lineHeight: '20px',
+            lineHeight: '15px',
             minHeight: '200px',
           }}
           onEditorStateChange={this.onEditorStateChange}

@@ -169,23 +169,47 @@ class Admin extends Component {
       </Layout>
     )
   }
+  hasMenu(menu) {
+    // 校验菜单权限
+    //处理格式，去掉/
+    let result = this.props.userInfo.user.role.menus.map(item => {
+      return item.replace('/', '')
+    })
+    if (this.props.userInfo.user.username === 'admin') {
+      return true
+    } else if (!menu.children) {
+      //没有children的菜单
+      result = result.find(item2 => {
+        return item2 === menu.key
+      })
+      return result
+    } else if (menu.children) {
+      //有children的菜单
+      result = menu.children.some(item3 => {
+        return result.indexOf(item3.key) !== -1
+      })
+      return result
+    }
+  }
   // 根据数据动态生成菜单函数
   creatMenu = menuData => {
     return menuData.map(item => {
-      if (item.children) {
-        // 二级菜单
-        return (
-          <SubMenu key={item.key} icon={item.icon} title={item.title}>
-            {this.creatMenu(item.children)}
-          </SubMenu>
-        )
-      } else {
-        // 一级菜单
-        return (
-          <Menu.Item key={item.key} icon={item.icon}>
-            <Link to={item.path}>{item.title}</Link>
-          </Menu.Item>
-        )
+      if (this.hasMenu(item)) {
+        if (item.children) {
+          // 二级菜单
+          return (
+            <SubMenu key={item.key} icon={item.icon} title={item.title}>
+              {this.creatMenu(item.children)}
+            </SubMenu>
+          )
+        } else {
+          // 一级菜单
+          return (
+            <Menu.Item key={item.key} icon={item.icon}>
+              <Link to={item.path}>{item.title}</Link>
+            </Menu.Item>
+          )
+        }
       }
     })
   }

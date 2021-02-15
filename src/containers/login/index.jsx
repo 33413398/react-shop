@@ -14,7 +14,7 @@ import './index.css'
 class LoginComponent extends Component {
   handleSubmit = async values => {
     const { username, password } = values
-    const { data, status } = await reqLogin(username, password)
+    const { data, msg, status } = await reqLogin(username, password)
     if (status === 0) {
       // 1.请求到的值保存到redux
       this.props.saveUserInfo(data)
@@ -22,7 +22,7 @@ class LoginComponent extends Component {
       this.props.history.replace('/admin')
       message.success('登录成功!')
     } else {
-      message.error(data.msg)
+      message.error(msg, 1)
     }
 
     // this.props.loginAsync(username, password)

@@ -26,3 +26,19 @@ export const reqProductDetails = productId => MyAxios.get(`${BASE_URL}/manage/pr
 export const reqDelImage = name => MyAxios.post(`${BASE_URL}/manage/img/delete`, { name })
 //添加商品
 export const reqAddProduct = data => MyAxios.post(`${BASE_URL}/manage/product/add`, { ...data })
+//修改商品
+export const reqUploadProduct = data => MyAxios.post(`${BASE_URL}/manage/product/update`, { ...data })
+// 获取角色列表
+export const reqRoleList = () => MyAxios.get(`${BASE_URL}/manage/role/list`)
+//添加角色
+export const reqAddRole = roleName => MyAxios.post(`${BASE_URL}/manage/role/add`, { roleName })
+//配置角色权限
+export const reqPowerRole = dataobj => MyAxios.post(`${BASE_URL}/manage/role/update`, { ...dataobj, auth_time: Date.now() })
+// 获取用户列表
+export const reqUserList = () => MyAxios.get(`${BASE_URL}/manage/user/list`)
+//添加用户
+export const reqAddUser = Useronj => MyAxios.post(`${BASE_URL}/manage/user/add`, { ...Useronj })
+//更新用户
+export const reqModifyUser = Useronj => MyAxios.post(`${BASE_URL}/manage/user/update`, { ...Useronj })
+//删除用户
+export const reqDelUser = userId => MyAxios.post(`${BASE_URL}/manage/user/delete`, { userId })

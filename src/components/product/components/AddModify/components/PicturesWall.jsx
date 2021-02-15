@@ -62,6 +62,23 @@ export default class PicturesWall extends Component {
     return newArry
   }
 
+  // 修改回显图片
+  setFileList = imageArry => {
+    let newArry = []
+    if (imageArry.length) {
+      imageArry.forEach((item, index) => {
+        newArry.push({
+          uid: -index,
+          name: item,
+          url: `${BASE_URL}/upload/${item}`,
+        })
+      })
+    }
+    this.setState({
+      fileList: newArry,
+    })
+  }
+
   render() {
     const { previewVisible, previewImage, fileList, previewTitle } = this.state
     const uploadButton = (

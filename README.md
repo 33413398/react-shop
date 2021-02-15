@@ -1,4 +1,4 @@
-# 一个使用 React+React+Redux 开发的一款商城管理系统
+# 一个使用 React+React-Redux+Antd(ui) 开发的一款商城管理系统
 
 ## shope_server.rar 为该项目运行必须的后台程序源码
 
